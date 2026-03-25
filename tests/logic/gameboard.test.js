@@ -81,3 +81,41 @@ describe("gameboard receives attack", () => {
 		assert.throws(() => gameboard.receiveAttack(0, 0), Error);
 	});
 });
+
+describe("gameboard knows if all ships are sunk", () => {
+	it("has zero of two ships sunk", () => {
+		const gameboard = new Gameboard();
+		gameboard.placeShip(5, 0, 0);
+		gameboard.placeShip(5, 1, 1);
+		assert.isFalse(gameboard.allShipsSunk());
+	});
+
+	it("has one of two ships sunk", () => {
+		const gameboard = new Gameboard();
+		gameboard.placeShip(5, 0, 0);
+		gameboard.placeShip(5, 1, 1);
+		gameboard.receiveAttack(0, 0);
+		gameboard.receiveAttack(0, 1);
+		gameboard.receiveAttack(0, 2);
+		gameboard.receiveAttack(0, 3);
+		gameboard.receiveAttack(0, 4);
+		assert.isFalse(gameboard.allShipsSunk());
+	});
+
+	it("has two of two ships sunk", () => {
+		const gameboard = new Gameboard();
+		gameboard.placeShip(5, 0, 0);
+		gameboard.placeShip(5, 1, 1);
+		gameboard.receiveAttack(0, 0);
+		gameboard.receiveAttack(0, 1);
+		gameboard.receiveAttack(0, 2);
+		gameboard.receiveAttack(0, 3);
+		gameboard.receiveAttack(0, 4);
+		gameboard.receiveAttack(1, 1);
+		gameboard.receiveAttack(1, 2);
+		gameboard.receiveAttack(1, 3);
+		gameboard.receiveAttack(1, 4);
+		gameboard.receiveAttack(1, 5);
+		assert.isTrue(gameboard.allShipsSunk());
+	});
+});
