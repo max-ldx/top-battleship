@@ -41,10 +41,31 @@ export class Gameboard {
 		for (let i = 0; i < length; i++) {
 			const currentX = isHorizontal ? x : x + i;
 			const currentY = isHorizontal ? y + i : y;
-			this.#grid[currentX][currentY] = ship;
+			this.#grid[currentX][currentY] = { ship: ship, hit: false };
 		}
 
 		this.#ships.push(ship);
 		return true;
+	}
+
+	receiveAttack(x, y) {
+		if (x < 0 || x >= this.#SIZE || y < 0 || y >= this.#SIZE) {
+			throw new RangeError("Coordinates out of bounds.");
+		}
+
+		const cell = this.#grid[x][y];
+
+		if (cell === null) {
+			this.#grid[x][y] = "miss";
+			return "miss";
+		}
+
+		if (cell === "miss" || cell.hit === true) {
+			throw new Error("Already attacked");
+		}
+
+		cell.hit = true;
+		cell.ship.hit();
+		return "hit";
 	}
 }
